@@ -35,12 +35,28 @@ jobs:
           # Use manual input version if provided, otherwise extract from tag
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             VERSION="${{ inputs.version }}"
+            # Validate version format (semantic versioning)
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Error: Version must follow semantic versioning format (e.g., 1.0.0)"
+              exit 1
+            fi
           else
             # Remove 'v' prefix from tag to get version number
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
+
+      - name: Determine tag name
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG_NAME="v${{ steps.version.outputs.version }}"
+          else
+            TAG_NAME="${{ github.ref_name }}"
+          fi
+          echo "name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Tag name: $TAG_NAME"
 
       - name: Update version in build.gradle
         run: |
@@ -78,7 +94,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.jar.outputs.file }}
-          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', steps.version.outputs.version) || github.ref_name }}
+          tag_name: ${{ steps.tag.outputs.name }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
             ## EasyPathForge Release ${{ steps.version.outputs.version }}
