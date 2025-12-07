@@ -48,7 +48,7 @@ To create a new release with an automated build, you have two options:
 
 ### Option 2: Manual Workflow Run
 
-1. Go to the [Actions](../../actions/workflows/release.yml) tab in the repository
+1. Go to the [Actions](../../actions) tab in the repository
 2. Select the "Release Pipeline" workflow
 3. Click "Run workflow"
 4. Select the branch (usually `main`)
@@ -58,6 +58,8 @@ To create a new release with an automated build, you have two options:
    - Build the mod JAR with the specified version
    - Create a GitHub release with tag `v[VERSION]`
    - Include installation instructions in the release notes
+
+**Note:** If a release with the same version tag already exists, it will be updated with the new build.
 
 Version tags should follow the format `v[MAJOR].[MINOR].[PATCH]` (e.g., `v1.0.0`, `v1.2.3`)
 
