@@ -11,6 +11,10 @@ The **Path Shovel** is a special item that helps players quickly build paths:
 - **Direction Aware**: The path extends in the direction the player is facing
 - **Durability**: Has 500 uses and wears down based on blocks replaced
 
+## Download
+
+Download the latest release from the [Releases](../../releases) page.
+
 ## Building the Mod
 
 1. Ensure you have Java 17 installed
@@ -24,6 +28,23 @@ The **Path Shovel** is a special item that helps players quickly build paths:
 2. Install Forge 47.3.11 or higher
 3. Place the mod JAR file in your `mods` folder
 4. Launch Minecraft
+
+## Creating a Release
+
+To create a new release with an automated build:
+
+1. Ensure all changes are committed and pushed to the `main` branch
+2. Create and push a version tag:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+3. The release pipeline will automatically:
+   - Build the mod JAR with the version from the tag
+   - Create a GitHub release with the JAR file attached
+   - Include installation instructions in the release notes
+
+Version tags should follow the format `v[MAJOR].[MINOR].[PATCH]` (e.g., `v1.0.0`, `v1.2.3`)
 
 ## Usage
 
