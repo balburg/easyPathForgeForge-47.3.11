@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PathShovelItem extends Item {
 
+    private static final int BLOCKS_PER_DURABILITY = 5;
+
     public PathShovelItem(Properties properties) {
         super(properties);
     }
@@ -64,9 +66,9 @@ public class PathShovelItem extends Item {
             }
         }
         
-        // Damage the item based on blocks replaced (1 durability per 10 blocks replaced)
+        // Damage the item based on blocks replaced (1 durability per BLOCKS_PER_DURABILITY blocks, minimum 1)
         if (blocksReplaced > 0) {
-            itemStack.hurtAndBreak(Math.max(1, blocksReplaced / 10), player, 
+            itemStack.hurtAndBreak(Math.max(1, (blocksReplaced + BLOCKS_PER_DURABILITY - 1) / BLOCKS_PER_DURABILITY), player, 
                 (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
         }
     }
