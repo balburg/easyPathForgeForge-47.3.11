@@ -31,7 +31,9 @@ Download the latest release from the [Releases](../../releases) page.
 
 ## Creating a Release
 
-To create a new release with an automated build:
+To create a new release with an automated build, you have two options:
+
+### Option 1: Using Git Tags (Recommended for versioned releases)
 
 1. Ensure all changes are committed and pushed to the `main` branch
 2. Create and push a version tag:
@@ -42,6 +44,19 @@ To create a new release with an automated build:
 3. The release pipeline will automatically:
    - Build the mod JAR with the version from the tag
    - Create a GitHub release with the JAR file attached
+   - Include installation instructions in the release notes
+
+### Option 2: Manual Workflow Run
+
+1. Go to the [Actions](../../actions/workflows/release.yml) tab in the repository
+2. Select the "Release Pipeline" workflow
+3. Click "Run workflow"
+4. Select the branch (usually `main`)
+5. Enter the version number (e.g., `1.0.0`)
+6. Click "Run workflow"
+7. The pipeline will automatically:
+   - Build the mod JAR with the specified version
+   - Create a GitHub release with tag `v[VERSION]`
    - Include installation instructions in the release notes
 
 Version tags should follow the format `v[MAJOR].[MINOR].[PATCH]` (e.g., `v1.0.0`, `v1.2.3`)

@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -23,11 +29,16 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Extract version from tag
+      - name: Extract version
         id: version
         run: |
-          # Remove 'v' prefix from tag to get version number
-          VERSION=${GITHUB_REF#refs/tags/v}
+          # Use manual input version if provided, otherwise extract from tag
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            # Remove 'v' prefix from tag to get version number
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
@@ -67,7 +78,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.jar.outputs.file }}
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', steps.version.outputs.version) || github.ref_name }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
             ## EasyPathForge Release ${{ steps.version.outputs.version }}
