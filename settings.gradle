@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.parchmentmc.org' }
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == 'net.minecraftforge.gradle') {
+                useModule('net.minecraftforge.gradle:ForgeGradle:6.0.+')
+            }
+        }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
