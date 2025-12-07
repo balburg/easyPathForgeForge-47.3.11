@@ -34,9 +34,9 @@ jobs:
       - name: Update version in build.gradle
         run: |
           VERSION=${{ steps.version.outputs.version }}
-          sed -i "s/version = '.*'/version = '$VERSION'/" build.gradle
+          sed -i "s/^version = '.*'/version = '$VERSION'/" build.gradle
           # Verify the version was updated
-          if ! grep -q "version = '$VERSION'" build.gradle; then
+          if ! grep -q "^version = '$VERSION'" build.gradle; then
             echo "Error: Failed to update version in build.gradle"
             exit 1
           fi
@@ -51,7 +51,10 @@ jobs:
       - name: Get JAR filename
         id: jar
         run: |
-          JAR_FILE=$(ls build/libs/*.jar 2>/dev/null | head -n 1)
+          # Find the JAR file built by the project (not reobf or sources)
+          JAR_FILE=$(find build/libs -name "easypathforge-*.jar" \
+            -not -name "*-sources.jar" -not -name "*-reobf.jar" \
+            2>/dev/null | head -n 1)
           if [ -z "$JAR_FILE" ]; then
             echo "Error: No JAR file found in build/libs/"
             exit 1
