@@ -52,7 +52,7 @@ public class ForestClearerItem extends Item {
         int blocksCleared = 0;
         
         // Clear a 4x4x4 cube centered on the target position
-        // Using -2 to 1 creates a 4-block range (4 blocks total)
+        // Using -2 to 1 (inclusive) creates a 4-block range: -2, -1, 0, 1
         for (int x = -2; x <= 1; x++) {
             for (int y = -2; y <= 1; y++) {
                 for (int z = -2; z <= 1; z++) {
