@@ -6,9 +6,12 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.tags.BlockTags;
 
 public class ForestClearerItem extends Item {
@@ -25,8 +28,18 @@ public class ForestClearerItem extends Item {
         ItemStack itemStack = player.getItemInHand(hand);
         
         if (!level.isClientSide) {
-            // Get the block position the player is looking at
-            BlockPos targetPos = player.blockPosition();
+            // Raycast to find the block the player is looking at
+            BlockHitResult hitResult = level.clip(new ClipContext(
+                player.getEyePosition(1.0F),
+                player.getEyePosition(1.0F).add(player.getViewVector(1.0F).scale(5.0)),
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.NONE,
+                player
+            ));
+            
+            // Use the hit block position if available, otherwise use player position
+            BlockPos targetPos = hitResult.getType() == HitResult.Type.BLOCK ? 
+                hitResult.getBlockPos() : player.blockPosition();
             
             // Clear the forest area
             clearForest(level, targetPos, itemStack, player);
@@ -39,9 +52,10 @@ public class ForestClearerItem extends Item {
         int blocksCleared = 0;
         
         // Clear a 4x4x4 cube centered on the target position
-        for (int x = -CLEAR_SIZE / 2; x < CLEAR_SIZE / 2; x++) {
-            for (int y = -CLEAR_SIZE / 2; y < CLEAR_SIZE / 2; y++) {
-                for (int z = -CLEAR_SIZE / 2; z < CLEAR_SIZE / 2; z++) {
+        // Using -2 to 1 creates a 4-block range (4 blocks total)
+        for (int x = -2; x <= 1; x++) {
+            for (int y = -2; y <= 1; y++) {
+                for (int z = -2; z <= 1; z++) {
                     BlockPos targetPos = centerPos.offset(x, y, z);
                     BlockState blockState = level.getBlockState(targetPos);
                     
