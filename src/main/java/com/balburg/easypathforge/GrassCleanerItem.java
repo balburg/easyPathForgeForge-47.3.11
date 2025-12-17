@@ -84,13 +84,13 @@ public class GrassCleanerItem extends Item {
      * This should NOT include grass blocks or dirt blocks, only the plants on top
      */
     private boolean isRemovableVegetation(BlockState blockState) {
-        // Check for flowers using the BlockTags.FLOWERS tag
+        // Check for flowers using the BlockTags.FLOWERS tag (includes all vanilla flowers)
         if (blockState.is(BlockTags.FLOWERS)) {
             return true;
         }
         
-        // Check for various grass types (short grass, tall grass, fern, etc.)
-        // In Minecraft 1.20.1, these blocks use the older naming
+        // Check for various grass/plant types
+        // Note: In Minecraft 1.20.1, Blocks.GRASS refers to the grass plant, not grass_block
         if (blockState.is(Blocks.GRASS) || 
             blockState.is(Blocks.TALL_GRASS) ||
             blockState.is(Blocks.FERN) ||
@@ -98,7 +98,7 @@ public class GrassCleanerItem extends Item {
             return true;
         }
         
-        // Also include other decorative plants that might be in the way
+        // Also include other decorative plants
         if (blockState.is(Blocks.DEAD_BUSH) ||
             blockState.is(Blocks.SEAGRASS) ||
             blockState.is(Blocks.TALL_SEAGRASS)) {
