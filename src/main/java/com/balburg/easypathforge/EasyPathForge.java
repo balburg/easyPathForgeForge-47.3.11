@@ -30,6 +30,10 @@ public class EasyPathForge {
     // Register the Forest Clearer item
     public static final RegistryObject<Item> FOREST_CLEARER = ITEMS.register("forest_clearer", 
         () -> new ForestClearerItem(new Item.Properties().stacksTo(1).durability(500)));
+    
+    // Register the Grass Cleaner item
+    public static final RegistryObject<Item> GRASS_CLEANER = ITEMS.register("grass_cleaner", 
+        () -> new GrassCleanerItem(new Item.Properties().stacksTo(1).durability(500)));
 
     // Register custom creative mode tab
     public static final RegistryObject<CreativeModeTab> PATH_TOOLS_TAB = CREATIVE_MODE_TABS.register("path_tools_tab",
@@ -39,6 +43,7 @@ public class EasyPathForge {
             .displayItems((parameters, output) -> {
                 output.accept(PATH_SHOVEL.get());
                 output.accept(FOREST_CLEARER.get());
+                output.accept(GRASS_CLEANER.get());
             })
             .build());
 
